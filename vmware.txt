@@ -1,0 +1,27 @@
+
+### vmware notes ###
+
+## usb install with vmvisor-5.0.0 ##
+
+# create 'W95 FAT32 (LBA)' primary partition on usb stick, and set active boot flag on the partition.
+# format the partition.
+	$ mkfs.vfat -F 32 -n usb /dev/sdb1
+
+# config syslinux-3.86 version on usb
+	$ syslinux /dev/sdb1
+	$ cat mbr/mbr.bin > /dev/sdb
+
+# copy iso content to the partition
+	$ mount -o loop VMware-VMvisor-Installer-5.0.0.xx.iso /media/iso
+	$ mount /dev/sdb1 /media/usb
+	$ pushd /media/iso
+	$ cp -R * /media/usb
+	$ popd
+
+# modify syslinux config on usb
+	$ pushd /media/usb
+	$ mv isolinux.cfg syslinux.cfg
+
+	$ vim syslinux.cfg
+		replace 'APPEND -c boot.cfg' to 'APPEND -c boot.cfg -p 1', save and boot usb.
+
