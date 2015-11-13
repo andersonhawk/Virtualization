@@ -1,0 +1,4 @@
+### qemu-kvm use notes ###
+
+# qemu-kvm service: qemu-system-x86.service
+# qemu storage configuration: /etc/libvirt/storage/default.xml
