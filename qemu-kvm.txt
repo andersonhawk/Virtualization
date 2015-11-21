@@ -2,3 +2,18 @@
 
 # qemu-kvm service: qemu-system-x86.service
 # qemu storage configuration: /etc/libvirt/storage/default.xml
+
+
+### libvir-manager ###
+
+## virt-install - cli tool do automation depolyment of vms ##
+	$ virt-install --connect qemu:///system
+	$ virt-install --connect qemu+ssh://root@/10.2.15.188 \
+		--name <vmname> --description "description" \
+		--vcpus=1,maxvcpus=2 --ram 1024 \
+		--disk /var/lib/libvirt/images/some.img,size=4 \
+		--graphics vnc \
+		--cdrom=/var/lib/libvirt/images/some.iso \
+		--os-type=linux --os-variant=ubuntu \
+		--network bridge=br0
+	
