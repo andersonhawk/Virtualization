@@ -62,6 +62,8 @@ c9008020660262 ecap f0105a
 ## qemu hardware type info dump
 	$ qemu-system-x86_64 -machine help
 	$ qemu-system-x86_64 -cpu help
+	$ qemu-system-x86_64 -device help		# dump device type
+	$ qemu-system-x86_64 -device <dev_type>,help	# dump specific device type args
 
 ## qemu command args
 	-enable-kvm		# enable kvm option
@@ -94,3 +96,37 @@ c9008020660262 ecap f0105a
 
 # qemu system config (no swappable memory allocate)
 	-mem-path /dev/hugepages -mem-prealloc
+
+# qemu storage config (IDE, SCSI, virtio, floppy, flash, sd etc)
+	-hda <file> -hdb <file> -hdc <file> -hdd <file>
+	-fda <file> ...
+	-cdrom <file.iso>
+	-mtdblock <file>
+	-sd <file>
+
+# qemu storage boot sequence config
+	-boot [order=drvs][,once=drvs][,menu=on|off][,splash=splashfile][,splash-time=sp-time]
+		order_drv: a,b means floppy, c means first disk, d means cdrom, n network
+		eg: -boot order=cd,once=d,menu=on
+
+# qemu storage device -drive config
+	-drive option[,option[,option[,...]]]
+		file=file
+		if=interface		# ide, scsi, sd, mtd, floppy, virtio
+		bus=bus_num,unit=unit_num
+		index=index
+		media=media		# disk, cdrom
+		snapshot=snap		# on, off
+		cache=cache		# none, writeback, unsafe, directsync, writethrough
+		aio=aio			# threads, native
+		discard=discard		# ignore, unmap
+		addr=addr		# pci address
+
+		eg: typical block device configuration
+			# ide disk, guest bootcmd with 'root=/dev/sdax'
+			-drive file=img,if=none,id=disk1 \
+			-device ide-hd,drive=disk1,bus=ide.0
+
+			# virtio disk, guest bootcmd with 'root=/dev/vdax'
+			-drive file=img,if=none,id=disk1 \
+			-device virtio-blk-pci,scsi=off,drive=disk1,addr=0x4,bootindex=1
