@@ -1,4 +1,4 @@
-host kvm kernel modules:
+## host kvm kernel modules:
 /lib/modules/<version>/kernel/arch/x86/kvm: 
 kvm.ko, kvm_intel.ko (the module create character device: /dev/kvm)
 
@@ -8,7 +8,7 @@ VT-d (chip/device),
 VMDq(virtualization device queue),
 VMDc(virtualization machine connection)
 
-Enable VT-x VT-d in BIOS, and verify the option in Host Linux system
+## Enable VT-x VT-d in BIOS, and verify the option in Host Linux system
 
 root@thinkpad:~# lscpu
 Architecture:          x86_64
@@ -47,3 +47,11 @@ c9008020660262 ecap f0105a
 [    0.023404] IOAPIC id 2 under DRHD base  0xfed91000 IOMMU 1
 [    0.554440] AMD IOMMUv2 driver by Joerg Roedel <joerg.roedel@amd.com>
 [    0.554442] AMD IOMMUv2 functionality not available on this system
+
+## sync qemu code:  git://git.qemu-project.org/qemu.git
+## build qemu with kvm support, depends on some packages
+	$ ./configure --prefix=/usr/local/qemu --target-list="arm-softmmu x86_64-softmmu" \
+		--enable-vnc --disable-sdl --enable-kvm --enable-vhost-net
+	$ make; make install
+
+
