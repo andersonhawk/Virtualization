@@ -1,0 +1,49 @@
+host kvm kernel modules:
+/lib/modules/<version>/kernel/arch/x86/kvm: 
+kvm.ko, kvm_intel.ko (the module create character device: /dev/kvm)
+
+host hardware support virtualization technologies (cpu, board, network):
+VT-x (cpu),
+VT-d (chip/device),
+VMDq(virtualization device queue),
+VMDc(virtualization machine connection)
+
+Enable VT-x VT-d in BIOS, and verify the option in Host Linux system
+
+root@thinkpad:~# lscpu
+Architecture:          x86_64
+CPU op-mode(s):        32-bit, 64-bit
+Byte Order:            Little Endian
+CPU(s):                4
+On-line CPU(s) list:   0-3
+Thread(s) per core:    2
+Core(s) per socket:    2
+Socket(s):             1
+NUMA node(s):          1
+Vendor ID:             GenuineIntel
+CPU family:            6
+Model:                 58
+Model name:            Intel(R) Core(TM) i7-3520M CPU @ 2.90GHz
+Stepping:              9
+CPU MHz:               1920.230
+CPU max MHz:           3600.0000
+CPU min MHz:           1200.0000
+BogoMIPS:              5787.04
+Virtualization:        VT-x
+L1d cache:             32K
+L1i cache:             32K
+L2 cache:              256K
+L3 cache:              4096K
+NUMA node0 CPU(s):     0-3
+
+VT-d
+root@thinkpad:~# dmesg |grep -e DMAR -e IOMMU
+[    0.000000] ACPI: DMAR 0x00000000DAFDA000 0000B8 (v01 INTEL  SNB
+00000001 INTL 00000001)
+[    0.023324] dmar: IOMMU 0: reg_base_addr fed90000 ver 1:0 cap
+c0000020e60262 ecap f0101a
+[    0.023329] dmar: IOMMU 1: reg_base_addr fed91000 ver 1:0 cap
+c9008020660262 ecap f0105a
+[    0.023404] IOAPIC id 2 under DRHD base  0xfed91000 IOMMU 1
+[    0.554440] AMD IOMMUv2 driver by Joerg Roedel <joerg.roedel@amd.com>
+[    0.554442] AMD IOMMUv2 functionality not available on this system
