@@ -50,8 +50,10 @@ c9008020660262 ecap f0105a
 
 ## sync qemu code:  git://git.qemu-project.org/qemu.git
 ## build qemu with kvm support, depends on some packages
-	$ ./configure --prefix=/usr/local/qemu --target-list="arm-softmmu x86_64-softmmu" \
-		--enable-vnc --disable-sdl --enable-kvm --enable-vhost-net
+	$ ./configure --prefix=/usr/local/qemu --enable-kvm \
+		--target-list="aarch64-softmmu arm-softmmu x86_64-softmmu" \
+		--disable-sdl --enable-vhost-net --enable-linux-aio \
+		--enable-vnc --enable-docs
 	$ make; make install
 
 ## qemu monitor
@@ -108,6 +110,15 @@ c9008020660262 ecap f0105a
 	-boot [order=drvs][,once=drvs][,menu=on|off][,splash=splashfile][,splash-time=sp-time]
 		order_drv: a,b means floppy, c means first disk, d means cdrom, n network
 		eg: -boot order=cd,once=d,menu=on
+
+# qemu image tool: qemu-img command [opt]
+	$ qemu-img check [-f fmt] <img>
+	$ qemu-img create [-f fmt] [-o options] <img> [size]
+	$ qemu-img convert [-f fmt] [-O output_fmt] [-o options] <img_name> <output_name>
+	$ qemu-img info [-f fmt] <img>
+	$ qemu-img snapshot [-l | -a snap | -c snap | -d snap] <img>
+	$ qemu-img resize <img> [+|-] size
+	$ qemu-img -h | --help		# dump qemu-img support img types
 
 # qemu storage device -drive config
 	-drive option[,option[,option[,...]]]
