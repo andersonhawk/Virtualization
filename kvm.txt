@@ -56,4 +56,26 @@ c9008020660262 ecap f0105a
 
 ## qemu monitor
 # enter: ctrl+alt+2, exit: ctrl+alt+1
+	$ info kvm		# check qemu kvm enable option
+	$ info cpus		# check guest system cpu infor
 
+## qemu hardware type info dump
+	$ qemu-system-x86_64 -machine help
+	$ qemu-system-x86_64 -cpu help
+
+## qemu command args
+	-enable-kvm		# enable kvm option
+
+# qemu smp config
+	-smp n[,maxcpus=num][,cores=num][,threads=num][,sockets=num]
+		eg: -smp 8,sockets=2,cores=2,threads=2
+		    use 'info cpus in QEMU monitor' or 'ps -L' to print in host
+
+# qemu cpu type config
+	-cpu <cpu_model>
+		eg: -cpu IvyBridge
+		    use 'cat /proc/cpuinfo' in QEMU guest system
+
+# qemu cpu affinity config
+# guest system use 'isolcpus=2,3' in boot command options
+# host system use 'taskset qemu threads'
