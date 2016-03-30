@@ -66,6 +66,7 @@ c9008020660262 ecap f0105a
 	$ qemu-system-x86_64 -cpu help
 	$ qemu-system-x86_64 -device help		# dump device type
 	$ qemu-system-x86_64 -device <dev_type>,help	# dump specific device type args
+	$ qemu-system-x86_64 -net nic,model=?		# dump support network device
 
 ## qemu command args
 	-enable-kvm		# enable kvm option
@@ -141,3 +142,8 @@ c9008020660262 ecap f0105a
 			# virtio disk, guest bootcmd with 'root=/dev/vdax'
 			-drive file=img,if=none,id=disk1 \
 			-device virtio-blk-pci,scsi=off,drive=disk1,addr=0x4,bootindex=1
+
+
+# qemu network device and model config: bridge, nat, user
+	-net nic[,vlan=n][,macaddr=mac][,model=type][,name=name][,addr=addr][,vectors=v]
+		eg: -net nic,model=virtio,macaddr=00:00:00:01:02:03,addr=0x6
