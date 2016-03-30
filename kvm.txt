@@ -54,4 +54,6 @@ c9008020660262 ecap f0105a
 		--enable-vnc --disable-sdl --enable-kvm --enable-vhost-net
 	$ make; make install
 
+## qemu monitor
+# enter: ctrl+alt+2, exit: ctrl+alt+1
 
