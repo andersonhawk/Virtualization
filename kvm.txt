@@ -79,3 +79,18 @@ c9008020660262 ecap f0105a
 # qemu cpu affinity config
 # guest system use 'isolcpus=2,3' in boot command options
 # host system use 'taskset qemu threads'
+
+# qemu memory config
+	-m <num MB>
+		eg: -m 2048
+		    use 'cat /proc/meminfo' & 'free -m' in QEMU guest system
+
+# qemu huge page config
+# host system config
+	$ getconf PAGESIZE
+	$ cat /proc/meminfo |grep Hugepage
+	$ mount -t hugetlbfs hugetlbfs /dev/hugepages
+	$ sysctl vm.nr_hugepages=1024
+
+# qemu system config (no swappable memory allocate)
+	-mem-path /dev/hugepages -mem-prealloc
