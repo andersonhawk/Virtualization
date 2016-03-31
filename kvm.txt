@@ -66,7 +66,7 @@ c9008020660262 ecap f0105a
 	$ qemu-system-x86_64 -cpu help
 	$ qemu-system-x86_64 -device help		# dump device type
 	$ qemu-system-x86_64 -device <dev_type>,help	# dump specific device type args
-	$ qemu-system-x86_64 -net nic,model=?		# dump support network device
+	$ qemu-system-x86_64 -net nic,model=?|help	# dump support network device
 
 ## qemu command args
 	-enable-kvm		# enable kvm option
@@ -147,3 +147,23 @@ c9008020660262 ecap f0105a
 # qemu network device and model config: bridge, nat, user
 	-net nic[,vlan=n][,macaddr=mac][,model=type][,name=name][,addr=addr][,vectors=v]
 		eg: -net nic,model=virtio,macaddr=00:00:00:01:02:03,addr=0x6
+
+# qemu networking config
+	-netdev | -net
+		bridge | tap | l2tpv3 | vde | vhost-user | socket | user | dump | none
+
+		# bridge mode config
+
+		# create a bridge interface with bridge-utils in host system:
+			$ brctl addbr br0
+			$ brctl addif br0 eth0
+		# create a bridge configuration file in host system: /etc/qemu/bridge.conf
+		# add 'allow br0' in /etc/qemu/bridge.conf
+		# config ip address/route info on bridge interface
+
+		# guest command
+		-net nic,model=virtio \
+		-netdev bridge,id=openwrt,br=br0
+
+		-net nic,model=virtio \
+		-netdev tap,ifname=tap0,script=/etc/qemu-ifup,downscript=/etc/qemu-ifdown
