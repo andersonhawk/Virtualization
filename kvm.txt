@@ -60,6 +60,7 @@ c9008020660262 ecap f0105a
 # enter: ctrl+alt+2, exit: ctrl+alt+1
 	$ info kvm		# check qemu kvm enable option
 	$ info cpus		# check guest system cpu infor
+	$ info balloon		# check/modify balloon memory
 
 ## qemu hardware type info dump
 	$ qemu-system-x86_64 -machine help
@@ -140,6 +141,8 @@ c9008020660262 ecap f0105a
 			-device ide-hd,drive=disk1,bus=ide.0
 
 			# virtio disk, guest bootcmd with 'root=/dev/vdax'
+			-drive file=img,if=virtio
+
 			-drive file=img,if=none,id=disk1 \
 			-device virtio-blk-pci,scsi=off,drive=disk1,addr=0x4,bootindex=1
 
@@ -171,3 +174,39 @@ c9008020660262 ecap f0105a
 		# NAT mode config
 		-net nic,model=virtio \
 		-netdev tap,ifname=tap0,script=/etc/qemu-ifup-NAT,downscript=/etc/qemu-ifdown-NAT
+
+# virtio: hypervisor API
+# guest use virio API to communicate with hypervisor (I/O performance)
+# frondend driver in guest system:
+# 	virio-blk, virtio-net
+
+# inter-layer driver define 'ring' 
+#	virtio, virtio-ring etc
+
+# backend driver in QEMU
+#	virtio backend
+
+# virtio memory balloon
+	-balloon virtio
+	-device virtio-balloon-pci,id=balloon0,bus=pci.0,addr=0x4
+
+	# qemu monitor: ctrl+alt+2
+	$ info balloon
+	$ balloon <number>
+
+	# guest system: 'free -m' check live memory modification
+
+# virtio net
+	-net nic,model=virtio
+
+	# guest system close 'gso' && 'tso'
+	# ethtool -K eth0 gso off
+	# ethtool -K eth0 tso off
+
+# virtio net backend 'vhost-net' (replace qemu user mode backend)
+# host system: modprobe vhost_net
+	-net nic,model=virtio \
+	-netdev tap,vnet_hdr=on,vhost=on
+
+# virtio block (vdx)
+	-drive file=<img>,if=virtio
