@@ -211,7 +211,8 @@ c9008020660262 ecap f0105a
 # virtio block (vdx)
 	-drive file=<img>,if=virtio
 
-# qemu device type: emulate, virtio, pci pass-through (intel VT-d, AMD-Vi IOMMU)
+# Intel VT-D, AMD-Vi (IOMMU)
+# qemu device type: emulate, virtio, pci pass-through
 # host GRUB kernel option: 'intel_iommu=on'
 # host hide pci device
 	$ modprobe pci_stub
@@ -228,3 +229,10 @@ c9008020660262 ecap f0105a
 
 # qemu pass-through pci device
 	-device pci-assign,host=08:00.0,id=dev,addr=0x6
+
+# SR-IOV: Single Root I/O Virtualization and Sharing (network card)
+# PF: Physical Function (PCIE device with SR-IOV function)
+# VF: Virtual Function
+# SR-IOV offer guest system with memory space, interrupt, DMA
+# 	no hypervisor involve about data transfer.
+# check network device capability: lspci -v -s xx:xx.x
