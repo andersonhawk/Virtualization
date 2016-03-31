@@ -210,3 +210,21 @@ c9008020660262 ecap f0105a
 
 # virtio block (vdx)
 	-drive file=<img>,if=virtio
+
+# qemu device type: emulate, virtio, pci pass-through (intel VT-d, AMD-Vi IOMMU)
+# host GRUB kernel option: 'intel_iommu=on'
+# host hide pci device
+	$ modprobe pci_stub
+# check host pci device: vendor ID & device ID
+	$ lspci -Dn -s 08:00.0
+      domain:bus:slot:function	vendor ID: device ID
+	0000:08:00.0 0200: 8086:10b9 (rev 06)
+
+# bind device to pci_stub in host system
+	$ echo -n "8086 10b9" > /sys/bus/pci/drivers/pci-stub/new_id
+	$ echo 0000:08:00.0 > /sys/bus/pci/devices/0000:08:00.0/driver/unbind
+	$ echo 0000:08:00.0 > /sys/bus/pci/drivers/pci-stub/bind
+	$ lspci -k -s 08:00.0
+
+# qemu pass-through pci device
+	-device pci-assign,host=08:00.0,id=dev,addr=0x6
