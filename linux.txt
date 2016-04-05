@@ -1,1 +1,50 @@
 Linux virtualization knowledge.
+
+## virtualization networking ##
+# tun/tap device
+
+# tun device: virtual point-to-point device (ip layer virtual device, vpn)
+# dependencies: tun.ko and device /dev/net/tun
+	$ modprobe tun
+	$ ip tuntap help
+	$ ip tuntap add tun0 mode tun
+
+# tap device: virtual ethernet device (ethernet lay frame, qemu -net tap, -net bridge)
+	$ modprobe tun
+	$ ip tuntap add tap0 mode tap
+
+
+# network namespace: used by container and virtualization technology (lxc)
+# veth: virtual pair ethernet devices (internal bridge network function)
+	$ ip netns add ns1
+	$ ip link add veth0 type veth peer name veth1
+	$ ip link list  # dump two device veth0/veth1
+	$ ip link set veth1 netns ns1
+	$ ip link list  # just dump veth0, veth1 already in ns1 net namesapce
+	$ ip netns exec ns1 ip link show  # dump veth1 in ns1 net namespace
+
+	$ ip addr add dev veth0 10.2.15.8/24
+	$ ip netns exec ns1 ip addr add dev veth1 10.2.15.88/24
+
+	$ brctl addbr br0
+	$ brctl addif br0 eth0
+	$ brctl addif br0 veth0
+
+	$ ifconfig eth0 0.0.0.0
+	$ ifconfig veth0 0.0.0.0
+	$ dhclient br0
+	$ ip netns exec ns1 dhclient veth1
+	$ ip netns exec ns1 ip addr show
+
+# macvlan: create multi virtual network links (mac address) with one physic network card
+# macvlan with bridge mode: forward packet in host between macvlanx and macvlany device
+# macvlan with vepa mode: forward packet with external switch between macvlanx and macvlany
+#	device in the host.
+# macvlan with prviate mode: can't forward packet between macvlanx and macvlany in host.
+	$ ip link add link eth0 name macvlan0 type macvlan mode [bridge | vepa | prviate]
+
+# macvtap: use macvlan to create virtual ethernet link and character device
+(qeumu/kvm)
+	$ ip link add link eth0 name macvtap0 type macvtap mode [bridge | vepa
+| prviate | passthrough ]
+	$ qemu -net nic,model=virtio,addr=xx -net tap,fd=3 3<>/dev/tapX
