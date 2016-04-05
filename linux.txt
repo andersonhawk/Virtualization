@@ -47,4 +47,6 @@ Linux virtualization knowledge.
 (qeumu/kvm)
 	$ ip link add link eth0 name macvtap0 type macvtap mode [bridge | vepa
 | prviate | passthrough ]
+	$ cat /sys/class/net/macvtap0/address
+	$ cat /sys/class/net/macvtap0/ifindex
 	$ qemu -net nic,model=virtio,addr=xx -net tap,fd=3 3<>/dev/tapX
