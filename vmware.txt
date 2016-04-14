@@ -1,6 +1,14 @@
 
 ### vmware notes ###
 
+## vmware workstation ##
+	$ vmware-installer [opt]
+
+	$ vmrun list
+	$ vmrun start | stop xx.vmx
+
+## vmware esxi ##
+
 ## usb install with vmvisor-5.0.0 ##
 
 # create 'W95 FAT32 (LBA)' primary partition on usb stick, and set active boot flag on the partition.
