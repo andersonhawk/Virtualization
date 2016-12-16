@@ -1,0 +1,28 @@
+### mount raw/qcow2 image to host filesystem ###
+
+## mount raw format image ##
+
+## check partition table and read each partition offset: start_sector * sector_size ##
+$ sudo fdisk -l <sample.raw>
+$ sudo mount -o loop,offset=<start*sector> <sample.raw> /media/loop
+
+## use losetup tool ##
+
+## dump available loop device ##
+$ sudo losetup -f
+$ sudo losetup /dev/loop0 <sample.raw>
+$ sudo fdisk -lu /dev/loop0
+$ sudo mount -o offset=<start*sector> /dev/loop1 /media/loop
+$ sudo losetup -d /dev/loop0
+
+
+## mount qcow2 format image ##
+
+## use nbd module to mount qcow2 image ##
+
+$ grep NBD /boot/config-xxx
+$ modinfo nbd
+$ sudo modprobe nbd max_part=16
+$ sudo qemu-nbd -c /dev/nbd0 <sample.qcow2>
+$ sudo mount /dev/nbd0p1 /media/loop
+$ sudo qemu-nbd -d /dev/nbd0
