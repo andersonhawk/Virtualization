@@ -1,0 +1,12 @@
+### qemu help ###
+$ qemu-system-x86_64 -h
+
+### qemu support guest cpu list ###
+$ qemu-system-x86_64 -cpu ?
+
+### qemu support guest device list ###
+$ qemu-system-x86_64 -device ?
+
+### qemu support guest network list ###
+$ qemu-system-x86_64 -net nic,model=?
+
