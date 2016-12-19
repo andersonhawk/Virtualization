@@ -1,0 +1,20 @@
+### virsh cli management vms ###
+
+## install virt-* /qemu packages ##
+## config libvirtd and enable/start with systemctl tool ##
+
+
+## network part config ##
+
+# dump all of virtual network #
+$virsh net-list --all
+$virsh net-info default
+# check <default> nat/dhcp network configuration #
+# /etc/libvirt/qemu/networks/default.xml #
+$virsh net-dumpxml default
+
+# destroy virtual network: #
+#   destroy runtime config -- remove interface virbr0, virbr0-nic #
+$virsh net-destroy default
+# enable virtual network #
+$virsh net-start default
