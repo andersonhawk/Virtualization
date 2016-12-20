@@ -21,6 +21,47 @@ $ qemu-system-x86_64 -net nic,model=?
 
 
 ### qemu block device setting ###
-## nvme disk example ##
+## qemu block controller options ##
+	-drive file=,if=,bus=,unit=,index=,media=,\
+		snapshot=,cache=,aio=,format=,serial=,\
+		addr=,id=,readonly=,
+##		file=file: load vm image file ##
+##		if=interface: ide, scsi, virtio ##
+##		bus=bus: bus number ##
+##		unit=unit: unit number ##
+##		index=index: index number ##
+##		media=media type: disk, cdrom ##
+##
+##		snapshot=on|off
+##			snapshot is enable,qemu save data to temp file ##
+##			use 'commit' in monitor to commit to image file ##
+##		cache=cache type: none, writeback, writethrough ##
+##			default is writethrough, write data to ##
+##			disk cache and backend block device ##
+##			writeback just write data to disk cache ##
+##			none, qemu open file with 'O_DIRECT' flag, bypass ##
+##			diskcache and access block device ##
+##
+##		aio=aio type: threads, native ##
+##			threads use as a threads pool to do async model IO ##
+##			native use linux native AIO ##
+##		format=format type: qemu-img -h ##
+##		serial=serial number: foobal ##
+##		addr=pci address ##
+##		id=id_name: controller name, qemu monitor to check ##
+##		readonly=on|off ##
+
+## qemu block bootloading options ##
+	-boot order=,once=,menu=,splash=,splash-time=
+##		order=c,d,n: c disk, d cdrom, n net ##
+##		once=d: this time boot with cdrom, reboot with disk ##
+##		menu=on|off: off with non-interactive mode ##
+##		splash=splashfile, splash-time=splash-time with menu=on mode ##
+## qemu block device options ##
+
+## ide controller with disk example ##
+	-hda centos.qcow2
+	-cdrom centos.iso
+## nvme controller with disk example ##
 	-drive file=disk.qcow2,if=none,id=nvme_disk,serial=foo \
 	-device nvme,drive=nvme_disk
