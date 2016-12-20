@@ -10,3 +10,8 @@ $ qemu-system-x86_64 -device ?
 ### qemu support guest network list ###
 $ qemu-system-x86_64 -net nic,model=?
 
+### qemu network setting ###
+## hostfwd: use host local port to access qemu/vm ##
+	-net nic \
+	-net user,hostfwd=tcp::5022-:22
+	ssh -p 5022 root@127.0.0.1
