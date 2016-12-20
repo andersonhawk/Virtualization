@@ -26,3 +26,11 @@ $ sudo modprobe nbd max_part=16
 $ sudo qemu-nbd -c /dev/nbd0 <sample.qcow2>
 $ sudo mount /dev/nbd0p1 /media/loop
 $ sudo qemu-nbd -d /dev/nbd0
+
+## dump qemu support vm image files ##
+$ qemu-img -h
+
+## create a qcow2 image file ##
+$ qemu-img create -f qcow2 disk.qcow2 10G
+## check a qcow2 image file info ##
+$ qemu-img info disk.qcow2
