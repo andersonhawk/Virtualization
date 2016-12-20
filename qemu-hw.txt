@@ -1,6 +1,9 @@
 ### qemu help ###
 $ qemu-system-x86_64 -h
 
+### qemu support machine list ###
+$ qemu-system-x86_64 -machine ?
+
 ### qemu support guest cpu list ###
 $ qemu-system-x86_64 -cpu ?
 
@@ -15,3 +18,9 @@ $ qemu-system-x86_64 -net nic,model=?
 	-net nic \
 	-net user,hostfwd=tcp::5022-:22
 	ssh -p 5022 root@127.0.0.1
+
+
+### qemu block device setting ###
+## nvme disk example ##
+	-drive file=disk.qcow2,if=none,id=nvme_disk,serial=foo \
+	-device nvme,drive=nvme_disk
