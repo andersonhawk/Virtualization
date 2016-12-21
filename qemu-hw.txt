@@ -62,6 +62,18 @@ $ qemu-system-x86_64 -net nic,model=?
 ## ide controller with disk example ##
 	-hda centos.qcow2
 	-cdrom centos.iso
+
+## sata controller with two disk example ##
+# sata controller with ahci id #
+	-device ich9-ahci,id=ahci
+# two sata drive with image,id info #
+	-drive file=$SYS_DRV,if=none,id=$SYS_DRV_ID
+	-drive file=$USR_DRV,if=none,id=$USR_DRV_ID
+# two sata device with controller bus, sata drive info #
+	-device ide-drive,drive=$SYS_DRV_ID,bus=ahci.0
+	-device ide-drive,drive=$USR_DRV_ID,bus=ahci.1
+	-boot order=d,menu=on
+
 ## nvme controller with disk example ##
 	-drive file=disk.qcow2,if=none,id=nvme_disk,serial=foo \
 	-device nvme,drive=nvme_disk
