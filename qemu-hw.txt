@@ -83,3 +83,19 @@ $ qemu-system-x86_64 -net nic,model=?
 ## nvme controller with disk example ##
 	-drive file=disk.qcow2,if=none,id=nvme_disk,serial=foo \
 	-device nvme,drive=nvme_disk
+
+### qemu virio setting ###
+## virio net device ##
+	-net nic,model=virtio
+
+## virtio-blk-pci block device ##
+	-drive file=disk1.qcow2,if=none,id=disk1 \
+	-drive file=disk2.qcow2,if=none,id=disk2 \
+	-device virtio-blk-pci,scsi=off,id=virtio-disk,drive=disk1 \
+	-device virtio-blk-pci,scsi=off,id=virtio-disk1,drive=disk2 \
+
+## virtio-scsi-pci block device ##
+	-drive file=disk1.qcow2,if=none,id=disk1 \
+	-device virtio-scsi-pci,id=scsi0 \
+	-device scsi-disk,drive=disk1,bus=scsi0.0 \
+
