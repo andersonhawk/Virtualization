@@ -74,6 +74,12 @@ $ qemu-system-x86_64 -net nic,model=?
 	-device ide-drive,drive=$USR_DRV_ID,bus=ahci.1
 	-boot order=d,menu=on
 
+## sas/scsi controller with disk example ##
+# sas/scsi controller with sas id #
+	-device megasas,id=scsi
+	-drive file=$USR_DRV,if=none,id=$USR_DRV_ID
+	-device scsi-disk,drive=$USR_DRV_ID,bus=scsi.0
+
 ## nvme controller with disk example ##
 	-drive file=disk.qcow2,if=none,id=nvme_disk,serial=foo \
 	-device nvme,drive=nvme_disk
