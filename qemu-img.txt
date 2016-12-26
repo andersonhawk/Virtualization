@@ -34,3 +34,5 @@ $ qemu-img -h
 $ qemu-img create -f qcow2 disk.qcow2 10G
 ## check a qcow2 image file info ##
 $ qemu-img info disk.qcow2
+## convert image file format ##
+$ qemu-img convert -f vpc -O qcow2 disk.vpc disk.qcow2
