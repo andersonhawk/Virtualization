@@ -2,6 +2,8 @@
 
 ## install virt-* /qemu packages ##
 ## config libvirtd and enable/start with systemctl tool ##
+$ sudo systemctl enable libvirtd
+$ sudo systemctl start libvirtd
 
 
 ## network part config ##
