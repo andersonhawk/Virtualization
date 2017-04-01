@@ -5,6 +5,9 @@
 $ sudo systemctl enable libvirtd
 $ sudo systemctl start libvirtd
 
+## virsh URI format ##
+# driver[+transport]://[username@][hostname][:port]/[path][?extraparameters] #
+$ virsh --connect qemu+ssh://root@example.com/system list --all
 
 ## network part config ##
 
