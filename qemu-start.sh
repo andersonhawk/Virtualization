@@ -13,6 +13,7 @@ SIM_PLATFORM="-machine q35"
 SIM_VGA="-vga std"
 SIM_VNC="-vnc 0.0.0.0:2"
 SIM_MISC="-nodefaults -no-user-config"
+SIM_CHAR="-chardev socket,id=mon0,host=localhost,port=4444,server,nowait -mon chardev=mon0,mode=readline"
 
 #disk image files
 SIM_SYSIMG=${PWD}/centos7-scsi.qcow2
@@ -53,5 +54,5 @@ SIM_PUBNET="-net nic,model=virtio -net tap,script=${PWD}/qemu-ifup-nat,downscrip
 # qemu/kvm guest instance
 ${SIM} ${SIM_NAME} ${SIM_BOOT} ${SIM_CPU} ${SIM_MEM} ${SIM_PLATFORM} ${SIM_VGA} ${SIM_MISC} \
 	${SIM_PIVNET} ${SIM_PUBNET} \
-	${SIM_SAS_HD} ${SIM_AHCICTL} \
-	${SIM_EHCICTL}
+	${SIM_SAS_HD} ${SIM_AHCICTL} ${SIM_AHCIDRV} \
+	${SIM_EHCICTL} ${SIM_CHAR}
