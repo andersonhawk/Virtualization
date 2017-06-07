@@ -1,0 +1,119 @@
+#!/bin/bash
+
+# qemu-ifup script for QEMU/KVM with NAT network mode
+
+# bridge name
+BRIDGE=virbr0
+
+# network information
+NETWORK=192.168.122.0
+NETMASK=255.255.255.0
+GATEWAY=192.168.122.1
+DHCPRANGE=192.168.122.2,192.168.122.254
+
+# optionally parameters to enable PXE support
+TFTPROOT=
+BOOTP=
+
+function check_bridge()
+{
+	if brctl  show | grep "^$BRIDGE" &> /dev/null; then
+		printf "system without bridge $BRIDGE\n"
+		return 1
+	else
+		return 0
+	fi
+}
+
+function create_bridge()
+{
+	brctl addbr "$BRIDGE"
+	brctl stp "$BRIDGE" on
+	#brctl setfd "$BRIDGE" 0
+	#ifconfig "$BRIDGE" "$GATEWAY" netmask "$NETMASK" up
+	ip addr add "$GATEWAY"/"$NETMASK" dev "$BRIDGE"
+	ip link set dev "$BRIDGE" up
+}
+
+function enable_ip_forward()
+{
+	echo 1 > /proc/sys/net/ipv4/ip_forward
+}
+
+function add_filter_rules()
+{
+	iptables -t nat -A POSTROUTING -s "$NETWORK"/"$NETMASK" \
+		! -d "$NETWORK"/"$NETMASK" -j MASQUERADE
+}
+
+function start_dnsmasq()
+{
+	# don't run dnsmasq repeatedly
+	ps -ef | grep "dnsmasq" | grep -v "grep " &> /dev/null
+	if [ $? -eq 0 ]; then
+		echo "Warning: dnsmasq is already running."
+		return 0
+	fi
+
+	dnsmasq \
+		--strict-order \
+		--except-interface=lo \
+		--interface=$BRIDGE \
+		--listen-address=$GATEWAY \
+		--bind-interface \
+		--dhcp-range=$DHCPRANGE \
+		--conf-file=""
+		--pid-file=/var/run/qemu-dhcp-$BRIDGE.pid \
+		--dhcp-leasefile=/var/run/qemu-dhcp-$BRIDGE.leases \
+		--dhcp-no-override \
+		${TFTPROOT:+"--enable-tftp"} \
+		${TFTPROOT:+"--tftp-root=$TFTPROOT"} \
+		${BOOTP:+"--dhcp-boot=$BOOTP"}
+}
+
+function setup_bridge_nat()
+{
+	#check_bridge "$BRIDGE"
+	#if [ $? -eq 1 ]; then
+		create_bridge
+	#fi
+
+	enable_ip_forward
+	add_filter_rules "$BRIDGE"
+	start_dnsmasq "$BRIDGE"
+}
+
+function qemu-debug-step()
+{
+if [ "$1" == "bridge" ]; then
+	create_bridge
+	if [ $? -ne 0 ]; then
+		printf "fail to create bridge $BRIDGE\n"
+		exit 1
+	else
+		printf "success to create bridge $BRIDGE\n"
+	fi
+elif [ "$1" == "nat" ]; then
+	enable_ip_forward
+	add_filter_rules
+	printf "success to enable nat function\n"
+elif [ "$1" == "dns" ]; then
+	start_dnsmasq
+	if [ $? -ne 0 ]; then
+		printf "fail to start dns server on $BRIDGE\n"
+		exit 1
+	fi
+fi
+}
+
+# need to check $1 arg before setup
+if [ -n "$1" ]; then
+	setup_bridge_nat
+	#ifconfig "$1" 0.0.0.0 up
+	ip link set dev "$1" up
+	brctl addif "$BRIDGE" "$1"
+	exit 0
+else
+	echo "Error: no interface specified."
+	exit 1
+fi
